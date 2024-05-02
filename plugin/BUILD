@@ -28,8 +28,6 @@ sh_binary(
         "@org_xprof//plugin/tensorboard_plugin_profile/convert:all_libs",
         "@org_xprof//plugin/tensorboard_plugin_profile/integration_tests/tpu/tensorflow:tpu_tf2_keras_xla",
         "@org_xprof//plugin/tensorboard_plugin_profile/protobuf:protos_all",
-        "@org_xprof//plugin/trace_viewer:trace_viewer_index.html",
-        "@org_xprof//plugin/trace_viewer:trace_viewer_index.js",
     ],
     tags = [
         "local",

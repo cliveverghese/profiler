@@ -16,10 +16,3 @@ tf_web_library(
     ],
 )
 
-tensorboard_html_binary(
-    name = "trace_viewer_index",
-    input_path = "/trace_viewer.html",
-    js_path = "/trace_viewer_index.js",
-    output_path = "/trace_viewer_index.html",
-    deps = [":trace_viewer"],
-)

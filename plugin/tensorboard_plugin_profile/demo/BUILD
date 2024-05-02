@@ -29,8 +29,8 @@ py_binary(
     srcs_version = "PY2AND3",
     deps = [
         requirement("absl-py"),
-        "//:expect_tensorflow_installed",
-        "//third_party/py/google/protobuf:use_fast_cpp_protos",  # Automatically added go/proto_python_upb_flip
+        "@org_tensorflow//tensorflow/python/profiler/internal:_pywrap_profiler",
+	"//third_party/py/google/protobuf:use_fast_cpp_protos",  # Automatically added go/proto_python_upb_flip
         "@org_tensorflow_tensorboard//tensorboard/backend/event_processing:plugin_asset_util",
         "@org_xprof//plugin/tensorboard_plugin_profile:profile_plugin",
         "@org_xprof//plugin/tensorboard_plugin_profile/protobuf:protos_all_py_pb2",
