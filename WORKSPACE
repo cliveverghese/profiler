@@ -4,10 +4,11 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
     name = "bazel_skylib",
-    sha256 = "f7be3474d42aae265405a592bb7da8e171919d74c16f082a5457840f06054728",
+    sha256 = "74d544d96f4a5bb630d465ca8bbcfe231e3594e5aae57e1edbf17a6eb3ca2506",
     urls = [
-        "https://github.com/bazelbuild/bazel-skylib/releases/download/1.2.1/bazel-skylib-1.2.1.tar.gz",
-    ],
+            "https://storage.googleapis.com/mirror.tensorflow.org/github.com/bazelbuild/bazel-skylib/releases/download/1.3.0/bazel-skylib-1.3.0.tar.gz",
+            "https://github.com/bazelbuild/bazel-skylib/releases/download/1.3.0/bazel-skylib-1.3.0.tar.gz",
+     ],
 )
 
 load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
@@ -15,10 +16,10 @@ bazel_skylib_workspace()
 
 http_archive(
     name = "com_google_absl_py",
-    sha256 = "5b476479811ed0b8c57bc0b3f517bc379c31e2fd13e12743ba0984de0e3f254a",
-    strip_prefix = "abseil-py-127c98870edf5f03395ce9cf886266fa5f24455e",
+    sha256 = "a7c51b2a0aa6357a9cbb2d9437e8cd787200531867dc02565218930b6a32166e",
+    strip_prefix = "abseil-py-1.0.0", 
     urls = [
-        "https://github.com/abseil/abseil-py/archive/127c98870edf5f03395ce9cf886266fa5f24455e.tar.gz",
+        "https://github.com/abseil/abseil-py/archive/refs/tags/v1.0.0.tar.gz",
     ],
 )
 
@@ -35,8 +36,9 @@ http_archive(
 
 http_archive(
     name = "rules_python",
-    url = "https://github.com/bazelbuild/rules_python/releases/download/0.2.0/rules_python-0.2.0.tar.gz",
-    sha256 = "778197e26c5fbeb07ac2a2c5ae405b30f6cb7ad1f5510ea6fdac03bded96cc6f",
+    strip_prefix = "rules_python-0.34.0",
+    url = "https://github.com/bazelbuild/rules_python/releases/download/0.34.0/rules_python-0.34.0.tar.gz", 
+    sha256 = "778aaeab3e6cfd56d681c89f5c10d7ad6bf8d2f1a72de9de55b23081b2d31618",
 )
 
 http_archive(
@@ -104,25 +106,24 @@ http_archive(
 load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
 sass_repositories()
 
-http_archive(
-    name = "org_tensorflow",
-    # NOTE: when updating this, MAKE SURE to also update the protobuf_js runtime version
-    # in third_party/workspace.bzl to >= the protobuf/protoc version provided by TF.
-    sha256 = "638e541a4981f52c69da4a311815f1e7989bf1d67a41d204511966e1daed14f7",
-    strip_prefix = "tensorflow-2.1.0",
-    urls = [
-        "http://mirror.tensorflow.org/github.com/tensorflow/tensorflow/archive/v2.1.0.tar.gz",  # 2020-01-06
-        "https://github.com/tensorflow/tensorflow/archive/v2.1.0.tar.gz",
-    ],
-)
+#http_archive(
+#    name = "org_tensorflow",
+#    # NOTE: when updating this, MAKE SURE to also update the protobuf_js runtime version
+#    # in third_party/workspace.bzl to >= the protobuf/protoc version provided by TF.
+#    sha256 = "638e541a4981f52c69da4a311815f1e7989bf1d67a41d204511966e1daed14f7",
+#    strip_prefix = "tensorflow-2.1.0",
+#    urls = [
+#        "http://mirror.tensorflow.org/github.com/tensorflow/tensorflow/archive/v2.1.0.tar.gz",  # 2020-01-06
+#        "https://github.com/tensorflow/tensorflow/archive/v2.1.0.tar.gz",
+#    ],
+#)
 
 http_archive(
     name = "com_google_protobuf",
-    sha256 = "9a301cf94a8ddcb380b901e7aac852780b826595075577bb967004050c835056",
-    strip_prefix = "protobuf-3.19.6",
+    sha256 = "f66073dee0bc159157b0bd7f502d7d1ee0bc76b3c1eac9836927511bdc4b3fc1", 
+    strip_prefix = "protobuf-3.21.9",
     urls = [
-        "http://mirror.tensorflow.org/github.com/protocolbuffers/protobuf/archive/v3.19.6.tar.gz",
-        "https://github.com/protocolbuffers/protobuf/archive/v3.19.6.tar.gz",  # 2022-09-29
+        "https://github.com/protocolbuffers/protobuf/archive/v3.21.9.zip",
     ],
 )
 
@@ -140,10 +141,26 @@ http_archive(
 load("@org_tensorflow_tensorboard//third_party:workspace.bzl", "tensorboard_workspace")
 tensorboard_workspace()
 
-load("@rules_python//python:pip.bzl", "pip_install")
+load("@rules_python//python:repositories.bzl", "py_repositories")
 
-pip_install(
-    name = "python_deps",
-    requirements = "//:requirements.txt",
+py_repositories()
+
+load("@rules_python//python:repositories.bzl", "python_register_toolchains")
+
+python_register_toolchains(
+    name = "python_3_10",
+    # Available versions are listed in @rules_python//python:versions.bzl.
+    # We recommend using the same version your team is already standardized on.
+    python_version = "3.10",
 )
 
+load("@rules_python//python:pip.bzl", "pip_parse")
+
+pip_parse(
+    name = "pypi",
+    python_interpreter_target = interpreter,
+    requirements_lock = "//:requirements_lock_3_10.txt",
+)
+
+# load("@pypi//:requirements.bzl", "install_deps")
+# install_deps()
