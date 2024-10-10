@@ -49,6 +49,17 @@ load("@python_deps//:requirements.bzl", "install_deps")
 install_deps()
 
 http_archive(
+    name = "io_bazel_rules_webtesting",
+    sha256 = "f89ca8e91ac53b3c61da356c685bf03e927f23b97b086cc593db8edc088c143f",
+    urls = [
+        # tag 0.3.1 resolves to commit afa8c4435ed8fd832046dab807ef998a26779ecb (2019-04-03 14:10:32 -0700)
+        "http://mirror.tensorflow.org/github.com/bazelbuild/rules_webtesting/releases/download/0.3.1/rules_webtesting.tar.gz",
+        "https://github.com/bazelbuild/rules_webtesting/releases/download/0.3.1/rules_webtesting.tar.gz",
+    ],
+)
+
+
+http_archive(
     name = "com_google_absl_py",
     sha256 = "a7c51b2a0aa6357a9cbb2d9437e8cd787200531867dc02565218930b6a32166e",
     strip_prefix = "abseil-py-1.0.0", 
@@ -81,10 +92,11 @@ http_archive(
 
 http_archive(
     name = "io_bazel_rules_closure",
-    sha256 = "ae060075a7c468eee42e6a08ddbb83f5a6663bdfdbd461261a465f4a3ae8598c",
-    strip_prefix = "rules_closure-7f3d3351a8cc31fbaa403de7d35578683c17b447",
+    sha256 = "6a900831c1eb8dbfc9d6879b5820fd614d4ea1db180eb5ff8aedcb75ee747c1f",
+    strip_prefix = "rules_closure-db4683a2a1836ac8e265804ca5fa31852395185b",
     urls = [
-        "https://github.com/bazelbuild/rules_closure/archive/7f3d3351a8cc31fbaa403de7d35578683c17b447.tar.gz",  # 2024-03-11
+        "http://mirror.tensorflow.org/github.com/bazelbuild/rules_closure/archive/db4683a2a1836ac8e265804ca5fa31852395185b.tar.gz",
+        "https://github.com/bazelbuild/rules_closure/archive/db4683a2a1836ac8e265804ca5fa31852395185b.tar.gz",  # 2020-01-15
     ],
 )
 
@@ -172,6 +184,8 @@ http_archive(
     name = "org_tensorflow_tensorboard",
     sha256 = "bcd63689364fa397f4a8740349cf281a0f58f6ff93e09f7f049dc3744623fa29",
     strip_prefix = "tensorboard-0f4573b73838decf530bc8bcac53459fd4bc02e7",
+    patches = ["//third_party:tensorboard.patch"],
+    patch_args = ["-p1"],
     urls = ["https://github.com/tensorflow/tensorboard/archive/0f4573b73838decf530bc8bcac53459fd4bc02e7.tar.gz"], # 2021-03-08
 )
 
