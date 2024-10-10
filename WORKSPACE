@@ -15,6 +15,40 @@ load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
 bazel_skylib_workspace()
 
 http_archive(
+    name = "rules_python",
+    strip_prefix = "rules_python-0.34.0",
+    url = "https://github.com/bazelbuild/rules_python/releases/download/0.34.0/rules_python-0.34.0.tar.gz", 
+    sha256 = "778aaeab3e6cfd56d681c89f5c10d7ad6bf8d2f1a72de9de55b23081b2d31618",
+)
+
+
+load("@rules_python//python:repositories.bzl", "py_repositories")
+
+py_repositories()
+
+load("@rules_python//python:repositories.bzl", "python_register_toolchains")
+
+python_register_toolchains(
+    name = "python",
+    # Available versions are listed in @rules_python//python:versions.bzl.
+    # We recommend using the same version your team is already standardized on.
+    python_version = "3.10",
+)
+
+load("@python//:defs.bzl", "interpreter")
+
+load("@rules_python//python:pip.bzl", "pip_parse")
+
+pip_parse(
+    name = "python_deps",
+    python_interpreter_target = interpreter,
+    requirements_lock = "//:requirements_lock_3_10.txt",
+)
+
+load("@python_deps//:requirements.bzl", "install_deps")
+install_deps()
+
+http_archive(
     name = "com_google_absl_py",
     sha256 = "a7c51b2a0aa6357a9cbb2d9437e8cd787200531867dc02565218930b6a32166e",
     strip_prefix = "abseil-py-1.0.0", 
@@ -35,29 +69,22 @@ http_archive(
 )
 
 http_archive(
-    name = "rules_python",
-    strip_prefix = "rules_python-0.34.0",
-    url = "https://github.com/bazelbuild/rules_python/releases/download/0.34.0/rules_python-0.34.0.tar.gz", 
-    sha256 = "778aaeab3e6cfd56d681c89f5c10d7ad6bf8d2f1a72de9de55b23081b2d31618",
-)
-
-http_archive(
-    name = "io_bazel_rules_webtesting",
-    sha256 = "f89ca8e91ac53b3c61da356c685bf03e927f23b97b086cc593db8edc088c143f",
+    name = "six_archive",
     urls = [
-        # tag 0.3.1 resolves to commit afa8c4435ed8fd832046dab807ef998a26779ecb (2019-04-03 14:10:32 -0700)
-        "http://mirror.tensorflow.org/github.com/bazelbuild/rules_webtesting/releases/download/0.3.1/rules_webtesting.tar.gz",
-        "https://github.com/bazelbuild/rules_webtesting/releases/download/0.3.1/rules_webtesting.tar.gz",
+        "http://mirror.bazel.build/pypi.python.org/packages/source/s/six/six-1.10.0.tar.gz",
+        "https://pypi.python.org/packages/source/s/six/six-1.10.0.tar.gz",
     ],
+    sha256 = "105f8d68616f8248e24bf0e9372ef04d3cc10104f1980f54d57b2ce73a5ad56a",
+    strip_prefix = "six-1.10.0",
+    build_file = "@com_google_absl_py//third_party:six.BUILD",
 )
 
 http_archive(
     name = "io_bazel_rules_closure",
-    sha256 = "6a900831c1eb8dbfc9d6879b5820fd614d4ea1db180eb5ff8aedcb75ee747c1f",
-    strip_prefix = "rules_closure-db4683a2a1836ac8e265804ca5fa31852395185b",
+    sha256 = "ae060075a7c468eee42e6a08ddbb83f5a6663bdfdbd461261a465f4a3ae8598c",
+    strip_prefix = "rules_closure-7f3d3351a8cc31fbaa403de7d35578683c17b447",
     urls = [
-        "http://mirror.tensorflow.org/github.com/bazelbuild/rules_closure/archive/db4683a2a1836ac8e265804ca5fa31852395185b.tar.gz",
-        "https://github.com/bazelbuild/rules_closure/archive/db4683a2a1836ac8e265804ca5fa31852395185b.tar.gz",  # 2020-01-15
+        "https://github.com/bazelbuild/rules_closure/archive/7f3d3351a8cc31fbaa403de7d35578683c17b447.tar.gz",  # 2024-03-11
     ],
 )
 
@@ -130,6 +157,16 @@ http_archive(
 load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
 protobuf_deps()
 
+http_archive(
+    name = "io_bazel_rules_closure",
+    sha256 = "6a900831c1eb8dbfc9d6879b5820fd614d4ea1db180eb5ff8aedcb75ee747c1f",
+    strip_prefix = "rules_closure-db4683a2a1836ac8e265804ca5fa31852395185b",
+    urls = [
+        "http://mirror.tensorflow.org/github.com/bazelbuild/rules_closure/archive/db4683a2a1836ac8e265804ca5fa31852395185b.tar.gz",
+        "https://github.com/bazelbuild/rules_closure/archive/db4683a2a1836ac8e265804ca5fa31852395185b.tar.gz",  # 2020-01-15
+    ],
+)
+
 
 http_archive(
     name = "org_tensorflow_tensorboard",
@@ -140,27 +177,3 @@ http_archive(
 
 load("@org_tensorflow_tensorboard//third_party:workspace.bzl", "tensorboard_workspace")
 tensorboard_workspace()
-
-load("@rules_python//python:repositories.bzl", "py_repositories")
-
-py_repositories()
-
-load("@rules_python//python:repositories.bzl", "python_register_toolchains")
-
-python_register_toolchains(
-    name = "python_3_10",
-    # Available versions are listed in @rules_python//python:versions.bzl.
-    # We recommend using the same version your team is already standardized on.
-    python_version = "3.10",
-)
-
-load("@rules_python//python:pip.bzl", "pip_parse")
-
-pip_parse(
-    name = "pypi",
-    python_interpreter_target = interpreter,
-    requirements_lock = "//:requirements_lock_3_10.txt",
-)
-
-# load("@pypi//:requirements.bzl", "install_deps")
-# install_deps()

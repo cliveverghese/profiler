@@ -11,10 +11,10 @@ py_library(
     srcs = ["profile_plugin.py"],
     srcs_version = "PY2AND3",
     deps = [
-        "@org_pythonhosted_six",
-        "//:expect_tensorflow_installed",
-        "@org_pocoo_werkzeug",
-        "@org_tensorflow_tensorboard//tensorboard/backend/event_processing:plugin_asset_util",
+        requirement("six"),
+	"//:expect_tensorflow_installed",
+	"@org_pocoo_werkzeug",
+	"@org_tensorflow_tensorboard//tensorboard/backend/event_processing:plugin_asset_util",
         "@org_tensorflow_tensorboard//tensorboard/plugins:base_plugin",
         "@org_xprof//plugin/tensorboard_plugin_profile/convert:all_libs",
         "@org_xprof//plugin/tensorboard_plugin_profile/protobuf:protos_all_py_pb2",
@@ -30,8 +30,8 @@ py_library(
     ],
     deps = [
         ":profile_plugin",
-        "@org_pocoo_werkzeug",
-        "@org_tensorflow_tensorboard//tensorboard/backend/event_processing:event_multiplexer",
+	"@org_pocoo_werkzeug",
+	"@org_tensorflow_tensorboard//tensorboard/backend/event_processing:event_multiplexer",
         "@org_tensorflow_tensorboard//tensorboard/plugins:base_plugin",
     ],
 )

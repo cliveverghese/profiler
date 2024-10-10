@@ -39,5 +39,4 @@ py_proto_library(
     default_runtime = "@com_google_protobuf//:protobuf_python",
     protoc = "@com_google_protobuf//:protoc",
     srcs_version = "PY2AND3",
-    deps = ["@com_google_protobuf//:protobuf_python"],
 )

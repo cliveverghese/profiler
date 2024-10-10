@@ -133,7 +133,7 @@ py_library(
     srcs = ["trace_events_json.py"],
     srcs_version = "PY2AND3",
     deps = [
-        "@org_pythonhosted_six",
+        requirement("six"),
     ],
 )
 
