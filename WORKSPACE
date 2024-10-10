@@ -147,17 +147,74 @@ load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
 
 sass_repositories()
 
-#http_archive(
-#    name = "org_tensorflow",
-#    # NOTE: when updating this, MAKE SURE to also update the protobuf_js runtime version
-#    # in third_party/workspace.bzl to >= the protobuf/protoc version provided by TF.
-#    sha256 = "638e541a4981f52c69da4a311815f1e7989bf1d67a41d204511966e1daed14f7",
-#    strip_prefix = "tensorflow-2.1.0",
-#    urls = [
-#        "http://mirror.tensorflow.org/github.com/tensorflow/tensorflow/archive/v2.1.0.tar.gz",  # 2020-01-06
-#        "https://github.com/tensorflow/tensorflow/archive/v2.1.0.tar.gz",
-#    ],
-#)
+http_archive(
+    name = "org_tensorflow",
+    # NOTE: when updating this, MAKE SURE to also update the protobuf_js runtime version
+    # in third_party/workspace.bzl to >= the protobuf/protoc version provided by TF.
+    sha256 = "dc0410a05f2d6af0295ae93f8bd8904acc001d150aef06b20ce4bf24a303be86",
+    strip_prefix = "tensorflow-2.17.0",
+    urls = [
+        "https://github.com/tensorflow/tensorflow/archive/refs/tags/v2.17.0.zip"
+    ],
+)
+
+
+# Initialize TensorFlow's external dependencies.
+load("@org_tensorflow//tensorflow:workspace3.bzl", "workspace")
+workspace()
+load("@org_tensorflow//tensorflow:workspace2.bzl", "workspace")
+workspace()
+load("@org_tensorflow//tensorflow:workspace1.bzl", "workspace")
+workspace()
+load("@org_tensorflow//tensorflow:workspace0.bzl", "workspace")
+workspace()
+
+load(
+    "@local_tsl//third_party/gpus/cuda/hermetic:cuda_json_init_repository.bzl",
+    "cuda_json_init_repository",
+)
+
+cuda_json_init_repository()
+
+load(
+    "@cuda_redist_json//:distributions.bzl",
+    "CUDA_REDISTRIBUTIONS",
+    "CUDNN_REDISTRIBUTIONS",
+)
+load(
+    "@local_tsl//third_party/gpus/cuda/hermetic:cuda_redist_init_repositories.bzl",
+    "cuda_redist_init_repositories",
+    "cudnn_redist_init_repository",
+)
+
+cuda_redist_init_repositories(
+    cuda_redistributions = CUDA_REDISTRIBUTIONS,
+)
+
+cudnn_redist_init_repository(
+    cudnn_redistributions = CUDNN_REDISTRIBUTIONS,
+)
+
+load(
+    "@local_tsl//third_party/gpus/cuda/hermetic:cuda_configure.bzl",
+    "cuda_configure",
+)
+
+cuda_configure(name = "local_config_cuda")
+
+load(
+    "@local_tsl//third_party/nccl/hermetic:nccl_redist_init_repository.bzl",
+    "nccl_redist_init_repository",
+)
+
+nccl_redist_init_repository()
+
+load(
+    "@local_tsl//third_party/nccl/hermetic:nccl_configure.bzl",
+    "nccl_configure",
+)
+
+nccl_configure(name = "local_config_nccl")
 
 http_archive(
     name = "com_google_protobuf",
